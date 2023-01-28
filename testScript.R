@@ -51,15 +51,29 @@ isoDateTime
 
 #----------------------Sample Admin------------------------
 
-collection <- getCollection(url = "https://data.mongodb-api.com/app/data-nmzks/endpoint/data/beta",
+sampleAdmin <- getCollection(url = "https://data.mongodb-api.com/app/data-nmzks/endpoint/data/beta",
                             cluster = "Cluster0",
                             database = "sample_admin",
                             collection = "project_data",
                             apiKey = packageKey)
 
-resp <- find(collection, sprintf('"filter": %s', mongLt(5000, "PNTE")))
+filter <- sprintf('"filter": %s', mongLt(5000, "PNTE"))
+
+resp <- find(collection, filter)
 
 
+
+update <- mongEq(5500, "PNTE") |>
+  mongSet() |>
+  mongUpdate()
+
+filter <- mongOid("606382ebd03a00001a0045f2") |>
+  mongEq("_id") |>
+  mongFilter()
+
+resp <- updateOne(sampleAdmin, filter = filter, update = update)
+
+resp <- findOne(sampleAdmin, filter = filter)
 
 #---------------------- WeatherData----------------
 

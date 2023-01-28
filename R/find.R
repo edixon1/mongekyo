@@ -25,6 +25,7 @@ findOne <- function(collection, filter){
 #'@param collection mongekyo collection object
 #'@param filter character, filter to subset documents
 #'
+#'TODO: testing, input validation, output validation
 find <- function(collection, filter){
 
   reqBody <- stringr::str_replace(collection$REQBODYHEAD, "<query>",

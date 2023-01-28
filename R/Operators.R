@@ -125,6 +125,15 @@ mongFilter <- function(clause){
   return(sprintf('"filter": %s', clause))
 }
 
+mongUpdate <- function(clause){
+  return(sprintf('"update": %s', clause))
+}
+
+
+mongSet <- function(clause){
+  return(sprintf('{ "$set": %s }', clause))
+}
+
 
 
 
