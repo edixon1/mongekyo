@@ -2,9 +2,9 @@ Package: mongekyo
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
+    person("Eliot", "Dixon", , "eliot.dixon@kdv-decisions.com", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Description: This package is being created with the intention of making the MongoDB Data API more accessible to the R community.  MongoDB with Atlas is one of the more user friendly options for those looking to leverage remote databases within their workflow, and the new data API furthers this.  However, it can be easy, if you aren't a regular JSON user, to get bogged down trying to wrap your head around (or just debug) BSON in R.  This package is an effort to provide some tools for normal R users to perform CRUD operations on their data stored in an ATLAS hosted MongoDB cluster.
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
 Encoding: UTF-8
