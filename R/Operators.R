@@ -4,6 +4,7 @@
 
 #' Creates BSON formatted AND of two or more clauses
 #' TODO: Input validation
+#' @export
 mongAnd <- function(clauses){
   combinedClauses <- paste0(clauses, collapse = ", ")
   out <- sprintf('{ "$and": [%s] }', combinedClauses)
@@ -13,13 +14,14 @@ mongAnd <- function(clauses){
 
 #' Creates BSON formatted OR of two or more clauses
 #' TODO: Input validation
+#' @export
 mongOr <- function(clauses){
   combinedClauses <- paste0(clauses, collapse = ", ")
   out <- sprintf('{ "$or": [%s] }', combinedClauses)
   return(out)
 }
 
-
+#' @export
 mongOid <- function(id){
   return(sprintf('{ "$oid": "%s" }', id))
 }
@@ -28,6 +30,7 @@ mongOid <- function(id){
 #' @param field
 #' @param value
 #' TODO: document, input validation
+#' @export
 mongEq <- function(value, field){
 
   # Check if value is numeric
@@ -45,6 +48,7 @@ mongEq <- function(value, field){
 }
 
 #' TODO: documentaion, input validation
+#' @export
 mongGte <- function(value, field = NULL){
 
   if(is.null(field)){
@@ -60,6 +64,7 @@ mongGte <- function(value, field = NULL){
 }
 
 #' TODO: documentaion, input validation
+#' @export
 mongGt <- function(value, field = NULL){
 
   if(is.null(field)){
@@ -72,8 +77,8 @@ mongGt <- function(value, field = NULL){
 
 }
 
-
 #' TODO: documentaion, input validation
+#' @export
 mongLte <- function(value, field = NULL){
 
   if(is.null(field)){
@@ -86,7 +91,7 @@ mongLte <- function(value, field = NULL){
 
 }
 
-
+#' @export
 mongLt <- function(value, field = NULL){
 
   if(is.null(field)){
@@ -107,6 +112,7 @@ mongLt <- function(value, field = NULL){
 #' timezone names
 #'
 #' TODO: testing, input validation
+#' @export
 mongDateTime <- function(value, tz = "EST"){
 
   timeStr <- as.POSIXlt(value, tz) |>
@@ -121,15 +127,17 @@ mongDateTime <- function(value, tz = "EST"){
 }
 
 # todo: testing
+#' @export
 mongFilter <- function(clause){
   return(sprintf('"filter": %s', clause))
 }
 
+#' @export
 mongUpdate <- function(clause){
   return(sprintf('"update": %s', clause))
 }
 
-
+#' @export
 mongSet <- function(clause){
   return(sprintf('{ "$set": %s }', clause))
 }

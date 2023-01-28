@@ -67,13 +67,14 @@ update <- mongEq(5500, "PNTE") |>
   mongSet() |>
   mongUpdate()
 
-filter <- mongOid("606382ebd03a00001a0045f2") |>
-  mongEq("_id") |>
+filter <- mongLte(6000, "PNTE") |>
   mongFilter()
+
+resp <- updateMany(sampleAdmin, filter = filter, update = update)
 
 resp <- updateOne(sampleAdmin, filter = filter, update = update)
 
-resp <- findOne(sampleAdmin, filter = filter)
+resp <- find(sampleAdmin, filter = filter)
 
 #---------------------- WeatherData----------------
 

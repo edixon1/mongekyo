@@ -6,8 +6,8 @@
 #' Send request to data API /updateOne endpoint
 #'@param collection mongekyo collection object
 #'@param filter character, filter to subset documents
-#'
 #'TODO: testing, input validation, output validation
+#'@export
 updateOne <- function(collection, filter, update){
 
   reqBody <- stringr::str_replace(collection$REQBODYHEAD, "<query>",
@@ -30,8 +30,8 @@ updateOne <- function(collection, filter, update){
 #' Send request to data API /updateOne endpoint
 #'@param collection mongekyo collection object
 #'@param filter character, filter to subset documents
-#'
 #'TODO: testing, input validation, output validation
+#'@export
 updateMany <- function(collection, filter, update){
 
   reqBody <- stringr::str_replace(collection$REQBODYHEAD, "<query>",

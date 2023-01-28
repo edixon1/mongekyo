@@ -5,7 +5,8 @@
 #' Send request to data API /findOne endpoint
 #'@param collection mongekyo collection object
 #'@param filter character, filter to subset documents
-#'
+#'TODO: testing, input validation, output validation
+#'@export
 findOne <- function(collection, filter){
 
   reqBody <- stringr::str_replace(collection$REQBODYHEAD, "<query>",
@@ -24,8 +25,8 @@ findOne <- function(collection, filter){
 #' Send request to data API /find endpoint
 #'@param collection mongekyo collection object
 #'@param filter character, filter to subset documents
-#'
 #'TODO: testing, input validation, output validation
+#'@export
 find <- function(collection, filter){
 
   reqBody <- stringr::str_replace(collection$REQBODYHEAD, "<query>",
@@ -41,12 +42,3 @@ find <- function(collection, filter){
 
 }
 
-
-
-
-
-# reqBody <- '{ "dataSource": "Cluster0",
-#               "database": "sample_mflix",
-#               "collection": "comments",
-#               "filter": {"name": "Kelsey Smith"}
-#               }'
