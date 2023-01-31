@@ -31,10 +31,10 @@ resetTestIris <- function(key){
     httr::content()
 
   # Reinsert original iris set
-  myIris <- dplyr::mutate(iris, Source.Id = paste0(dplyr::row_number(), "_iris_LocalId")) |>
-    dplyr::select(Source.Id, dplyr::everything())
+  testIris <- readRDS(test_path("fixtures", "testIris.rds"))
+  #readRDS(test_path("fixtures", "useful_thing1.rds"))
 
-  irisDocs <- asDocument(myIris)
+  irisDocs <- asDocument(testIris)
 
   insResp <- insertMany(irisCollection, documents = sprintf('"documents": %s', irisDocs)) |>
     httr::content()
@@ -42,4 +42,14 @@ resetTestIris <- function(key){
   # Return n deleted, n inserted
   out <- c("Deleted" = delResp$deletedCount, "Inserted" = length(insResp$insertedIds))
   return(out)
+}
+
+writeTestIris <- function(){
+  testIris <- dplyr::mutate(iris, Source.Id = paste0(dplyr::row_number(), "_iris_LocalId")) |>
+    dplyr::select(Source.Id, dplyr::everything()) |>
+    dplyr::mutate(Species = as.character(Species))
+
+  names(testIris) <- stringr::str_replace_all(names(testIris), "\\.", "_")
+
+  saveRDS(testIris, "./tests/testthat/fixtures/testIris.Rds")
 }
