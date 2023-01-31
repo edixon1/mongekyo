@@ -4,15 +4,27 @@
 # Internal functions which are designed to help testing processes
 
 
+# Return collection object for tests
+getTestCollection <- function(key){
+  irisCollection <- getCollection(url = "https://data.mongodb-api.com/app/data-nmzks/endpoint/data/beta",
+                                  cluster = "Cluster0",
+                                  database = "mongekyoTesting",
+                                  collection = "iris",
+                                  apiKey = key)
 
-resetTestIris <- function(){
+  return(irisCollection)
+}
+
+
+# Reset state of test collection
+resetTestIris <- function(key){
 
   # Setup collection
   irisCollection <- getCollection(url = "https://data.mongodb-api.com/app/data-nmzks/endpoint/data/beta",
                                   cluster = "Cluster0",
                                   database = "mongekyoTesting",
                                   collection = "iris",
-                                  apiKey = packageKey)
+                                  apiKey = key)
 
   # Delete all documents
   delResp <- deleteMany(irisCollection, mongFilter("{}")) |>
