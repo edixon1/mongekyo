@@ -113,7 +113,7 @@ mongLt <- function(value, field = NULL){
 #'
 #' TODO: testing, input validation
 #' @export
-mongDateTime <- function(value, tz = "EST"){
+mongDateTime <- function(value, tz = "UTC"){
 
   timeStr <- as.POSIXlt(value, tz) |>
     strftime("%Y-%m-%dT%H:%M:%S%z")
@@ -123,6 +123,19 @@ mongDateTime <- function(value, tz = "EST"){
 
   out <- sprintf('{ "$date": "%s" }', timeStr)
 
+  return(out)
+}
+
+
+# TEMPORARY
+mongDateFormat <- function(value, tz = "UTC"){
+  timeStr <- as.POSIXlt(value, tz) |>
+    strftime("%Y-%m-%dT%H:%M:%S%z")
+
+  timeStr <- sub('(+[0-9]{2})([0-9]{2}$)','\\1:\\2', timeStr, fixed=FALSE)
+
+
+  out <- sprintf('\"%s\"', timeStr)
   return(out)
 }
 
