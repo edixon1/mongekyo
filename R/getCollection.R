@@ -12,6 +12,8 @@
 #' @param database database name
 #' @param collection collection name
 #' @param apiKey API key obtained from mongodb.  Recommend to store this in .Renviron file.
+#'
+#' TODO: Add a bit of code which checks the connection to the collection
 #' @export
 getCollection <- function(url, cluster, database, collection, apiKey){
   out <- list(

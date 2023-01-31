@@ -37,10 +37,6 @@ insertMany <- function(collection, documents){
   reqBody <- stringr::str_replace(collection$REQBODYHEAD, "<query>",
                                   documents)
 
-  print(reqBody)
-
-
-
   resp <- httr::POST(url = paste0(collection$URL, "/action/insertMany"),
                      httr::add_headers("Content-Type" = "application/json",
                                        "api-key" = collection$KEY),
