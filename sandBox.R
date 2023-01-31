@@ -2,6 +2,56 @@
 
 
 packageKey <- Sys.getenv("packageKey")
+devtools::load_all()
+
+
+
+
+comments <- comments <- getCollection(url = "https://data.mongodb-api.com/app/data-nmzks/endpoint/data/beta",
+                                      cluster = "Cluster0",
+                                      database = "sample_mflix",
+                                      collection = "comments",
+                                      apiKey = packageKey)
+
+sampleAdmin <- getCollection(url = "https://data.mongodb-api.com/app/data-nmzks/endpoint/data/beta",
+                             cluster = "Cluster0",
+                             database = "sample_admin",
+                             collection = "project_data",
+                             apiKey = packageKey)
+
+
+weatherCol <- getCollection(url = "https://data.mongodb-api.com/app/data-nmzks/endpoint/data/beta",
+                            cluster = "Cluster0",
+                            database = "sample_weatherdata",
+                            collection = "data",
+                            apiKey = packageKey)
+
+
+irisCollection <- getCollection(url = "https://data.mongodb-api.com/app/data-nmzks/endpoint/data/beta",
+                      cluster = "Cluster0",
+                      database = "mongekyoTesting",
+                      collection = "iris",
+                      apiKey = packageKey)
+
+
+#------------------------Insert Many-----------------
+
+myIris <- dplyr::mutate(iris, Source.Id = paste0(dplyr::row_number(), "_iris_LocalId")) |>
+  dplyr::select(Source.Id, dplyr::everything())
+
+irisDocs <- asDocument(myIris)
+
+resp <- insertMany(irisCollection, documents = sprintf('"documents": %s', irisDocs))
+
+
+
+
+resp <- insertOne(irisCollection, document = sprintf('"document": %s', irisDocs))
+
+asDocument(myIris)
+
+resp <- findOne(irisCollection, filter = '"{}"')
+
 
 
 
@@ -49,6 +99,23 @@ isoDateTime
 
 
 
+filter <- mongOid("5a9427658b0beebeb697bfd6") |>
+  mongEq("_id") |>
+  mongFilter()
+
+
+update <- mongDateTime(Sys.time()) |>
+  mongEq("date") |>
+  mongSet() |>
+  mongUpdate()
+
+
+resp <- updateOne(comments, filter = filter,
+          update = update
+          )
+
+
+
 #----------------------Sample Admin------------------------
 
 sampleAdmin <- getCollection(url = "https://data.mongodb-api.com/app/data-nmzks/endpoint/data/beta",
@@ -67,14 +134,20 @@ update <- mongEq(5500, "PNTE") |>
   mongSet() |>
   mongUpdate()
 
-filter <- mongLte(6000, "PNTE") |>
+filter <- mongLte(5500, "PNTE") |>
   mongFilter()
 
 resp <- updateMany(sampleAdmin, filter = filter, update = update)
 
 resp <- updateOne(sampleAdmin, filter = filter, update = update)
 
-resp <- find(sampleAdmin, filter = filter)
+resp <- findOne(sampleAdmin, filter = filter)
+
+testJson
+
+resp <- insertOne(sampleAdmin, sprintf('"document" : %s', testJson))
+
+
 
 #---------------------- WeatherData----------------
 
