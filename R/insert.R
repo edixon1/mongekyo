@@ -6,7 +6,7 @@
 #' Inserts a single document into collection
 #' @param collection collection object
 #' @param document document in BSON format
-#'TODO: input validation
+#'TODO: input validation, add check if document already contains _id field
 #'
 #'@export
 insertOne <- function(collection, document){
@@ -30,7 +30,7 @@ insertOne <- function(collection, document){
 #' Inserts a one or many documents into a collection
 #' @param collection collection object
 #' @param document array of documents in BSON format
-#'TODO: input validation
+#'TODO: input validation, add check if document already contains _id field
 #'
 #'@export
 insertMany <- function(collection, documents){
