@@ -5,8 +5,7 @@ Authors@R:
     person("Eliot", "Dixon", , "eliot.dixon@kdv-decisions.com", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: This package is being created with the intention of making the MongoDB Data API more accessible to the R community.  MongoDB with Atlas is one of the more user friendly options for those looking to leverage remote databases within their workflow, and the new data API furthers this.  However, it can be easy, if you aren't a regular JSON user, to get bogged down trying to wrap your head around (or just debug) BSON in R.  This package is an effort to provide some tools for normal R users to perform CRUD operations on their data stored in an ATLAS hosted MongoDB cluster.
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+License: `use_mit_license()`
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
