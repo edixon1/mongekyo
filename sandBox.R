@@ -1,40 +1,44 @@
 
 
 
-packageKey <- Sys.getenv("packageKey")
+testKey <- Sys.getenv("mongekyoTestKey")
 devtools::load_all()
 
 
 
-
-comments <- comments <- getCollection(url = "https://data.mongodb-api.com/app/data-nmzks/endpoint/data/beta",
+comments <- getCollection(url = "https://data.mongodb-api.com/app/data-nmzks/endpoint/data/beta",
                                       cluster = "Cluster0",
                                       database = "sample_mflix",
                                       collection = "comments",
-                                      apiKey = packageKey)
+                                      apiKey = testKey)
 
 sampleAdmin <- getCollection(url = "https://data.mongodb-api.com/app/data-nmzks/endpoint/data/beta",
                              cluster = "Cluster0",
                              database = "sample_admin",
                              collection = "project_data",
-                             apiKey = packageKey)
+                             apiKey = testKey)
 
 
 weatherCol <- getCollection(url = "https://data.mongodb-api.com/app/data-nmzks/endpoint/data/beta",
                             cluster = "Cluster0",
                             database = "sample_weatherdata",
                             collection = "data",
-                            apiKey = packageKey)
+                            apiKey = testKey)
 
 
 irisCollection <- getCollection(url = "https://data.mongodb-api.com/app/data-nmzks/endpoint/data/beta",
                       cluster = "Cluster0",
                       database = "mongekyoTesting",
                       collection = "iris",
-                      apiKey = packageKey)
+                      apiKey = testKey)
 
 
-#------------------------Insert Many-----------------
+#------------------------Insert-----------------
+
+remIris <- findOne(irisCollection, mongFilter("{}")) |>
+  httr::content()
+
+remIris <- remIris$document
 
 myIris <- dplyr::mutate(iris, Source.Id = paste0(dplyr::row_number(), "_iris_LocalId")) |>
   dplyr::select(Source.Id, dplyr::everything())
@@ -50,14 +54,25 @@ resp <- insertOne(irisCollection, document = sprintf('"document": %s', irisDocs)
 
 asDocument(myIris)
 
-resp <- findOne(irisCollection, filter = '"{}"')
+resp <- findOne(irisCollection, filter = '"filter" : {}')
 
 
 
+#----------------------delete--------------------
+
+delFilter <- mongOid("63d931a1fc52907cf72eaa33") |>
+  mongEq("_id") |>
+  mongFilter()
+
+resp <- deleteOne(irisCollection, delFilter)
 
 
+delFilter <- mongEq("virginica", "Species") |>
+  mongFilter()
 
+resp <- deleteMany(irisCollection, delFilter)
 
+deleteMany(irisCollection, mongFilter("{}"))
 
 
 #-----------------------Comments-------------------------------
@@ -67,7 +82,7 @@ comments <- getCollection(url = "https://data.mongodb-api.com/app/data-nmzks/end
                           cluster = "Cluster0",
                           database = "sample_mflix",
                           collection = "comments",
-                          apiKey = packageKey)
+                          apiKey = testKey)
 
 
 
@@ -122,7 +137,7 @@ sampleAdmin <- getCollection(url = "https://data.mongodb-api.com/app/data-nmzks/
                             cluster = "Cluster0",
                             database = "sample_admin",
                             collection = "project_data",
-                            apiKey = packageKey)
+                            apiKey = testKey)
 
 filter <- sprintf('"filter": %s', mongLt(5000, "PNTE"))
 
@@ -192,7 +207,7 @@ weatherCol <- getCollection(url = "https://data.mongodb-api.com/app/data-nmzks/e
                             cluster = "Cluster0",
                             database = "sample_weatherdata",
                             collection = "data",
-                            apiKey = packageKey)
+                            apiKey = testKey)
 
 
 

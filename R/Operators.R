@@ -27,9 +27,9 @@ mongOid <- function(id){
 }
 
 #' Creates BSON formatted key-value pair
-#' @param field
-#' @param value
-#' TODO: document, input validation
+#' @param value value
+#' @param field field
+#'
 #' @export
 mongEq <- function(value, field){
 

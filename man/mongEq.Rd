@@ -7,7 +7,9 @@
 mongEq(value, field)
 }
 \arguments{
-\item{value}{TODO: document, input validation}
+\item{value}{value}
+
+\item{field}{field}
 }
 \description{
 Creates BSON formatted key-value pair

@@ -1,0 +1,248 @@
+---
+title: "Getting Started with Mongekyo"
+author: "Eliot Dixon"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with Mongekyo}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Mongekyo is an R package with the goal of making the MongoDB Data API more accessible to R users.  It accomplishes this by generating the BSON required to construct an API call with a family of pipe-friendly functions which allow users to build out API calls piece by piece.
+
+
+## Getting Started
+
+There are some prerequisites to this tutorial:
+
+- A MongoDB with Atlas cluster with the Data API enabled
+- An API string (preferably stored in your .Renviron file)
+- A database and collection stored within your MongoDB Cluster (We will use the default test collections within this tutorial)
+
+Setting up these prerequisites are not within the scope of this document.  However, they are covered in the beginning steps of my other totorial TODO WHEN HOSTED.
+
+If you're completed the initial set up, let's begin.
+
+```{r message = FALSE}
+#devtools::install_github("https://github.com/edixon1/mongekyo")
+library(mongekyo)
+library(httr)
+library(dplyr)
+```
+
+
+We will start by creating a collection object.  This object contains all the necessary information to locate your api and validate your request.
+
+We will work within the `comments` collection from the `sample_mflix` database provided in the MongoDB test data.  To create a collection object which points to this collection we will pass in the:
+
+- Cluster name: `Cluster0`
+- Data base name: `sample_mflix`
+- Collection name: `comments`
+- API Key string: `noneYa`
+
+
+```{r}
+# Retrieve API keystring stored in .Renviron
+testKey <- Sys.getenv("mongekyoTestKey")
+comments <- getCollection(url = "https://data.mongodb-api.com/app/data-nmzks/endpoint/data/beta",
+                                      cluster = "Cluster0",
+                                      database = "sample_mflix",
+                                      collection = "comments",
+                                      apiKey = testKey)
+
+```
+
+
+
+### MongoDB Clauses in BSON
+As stated above, mongekyo provides a family of functions which allow users to build out API requests piece by piece.  One of the largest advantages to this is that it makes typos when creating writing request headers far more unlikely.  
+
+Let me illustrate this by comparing a few mongekyo function calls with their equivelent BSON strings.
+
+Below we create a simple equality clause with the mongEq function:
+
+```{r}
+mongEq("Jojen Reed", "name")
+```
+
+Here is the equivelent BSON as you may write it within R:
+
+```{r echo = FALSE}
+"{'name': 'Jojen Reed'}" 
+# or with escape characters
+"{\"name\": \"Jojen Reed\"}"
+```
+This is hard.  Even for such a simple BSON clause, there is a fair possibility of missing a closing bracket, or forgetting to escape a quotation mark.  The upshot of all this is that as your requests become more complicated, there is a greater potential for mistakes in your BSON clauses.  As someone who has written a fair amount of BSON in R, I can say that this is a true nightmare to debug.
+
+
+## Calling the data API
+
+### findOne
+
+The findOne endpoint expects a `filter` parameter within the request body.  This looks like
+`'filter': <some-bson-clause>`.
+
+We can easily construct our filter with the mongEq and mongFilter functions.  Almost all of the mongekyo operator functions have the argument pattern (<value>, <field>) to make them pipe friendly.  As a result of this, we will build our requests from the inside out, first constructing the clause to specify our field-value pair with `mongEq()`, then passing them along to the `mongFilter()` to specify them as the filter parameter.
+
+```{r}
+myFilter <- mongEq("Jojen Reed", "name") %>% 
+  mongFilter()
+
+myFilter
+
+```
+
+We can now use the `findOne` function from mongekyo to call upon our collection with the filter constructed above.
+
+```{r}
+response <- findOne(collection = comments, filter = myFilter)
+
+response
+
+#find(weatherCol, filter = sprintf('"filter": {"_id": %s}', mongOid("5553a998e4b02cf715119412")))
+```
+
+
+From the above we can see our status: 200, meaning the request was successful.
+
+To unpack our response, we can use the `httr::content` function.
+
+```{r}
+myContent <- content(response)
+
+myContent$document
+```
+
+
+Within this document there is a returned field called `movie_id`.  Having some experience playing with the MongoDB test data set, I know that this is a value from the `_id` field from the `movies` collection from the sample_mflix database.
+
+### Using the ObjectId data type
+
+For a somewhat more complicated `findOne` request, let's pull the document from the `movies` collection which contains the `_id` field referenced in Jojen Reed's comment we pulled above.
+
+
+Since the `_id` field is of the type `ObjectId` by defualt, we have to use the `$oid` operator to convert our string to this type in our request body.  We can accomplish this by using the `mongOid` function.  Remember, since we are using pipes, we will build our request from the inside out.
+
+```{r}
+# Create movies collection object
+movies <- getCollection(
+  url ="https://data.mongodb-api.com/app/data-nmzks/endpoint/data/beta",
+  cluster = "Cluster0",
+  database = "sample_mflix",
+  collection = "movies",
+  apiKey = testKey)
+
+# Store movie_id field from Jojen's comment
+movId <- myContent$document$movie_id
+
+# Construct our filter
+movieFilter <- mongOid(movId) %>% 
+  mongEq("_id") %>% 
+  mongFilter()
+
+movieFilter
+
+```
+
+As we can see, BSON becomes complex fairly quickly.  Let's recreate the above steps without using the pipe.  This way, we can examine the state of our request after each function call.
+```{r}
+movieFilter <- mongOid(movId)
+movieFilter
+movieFilter <- mongEq(movieFilter, "_id")
+movieFilter
+movieFilter <- mongFilter(movieFilter)
+
+movieFilter
+```
+
+```{r}
+response <- findOne(movies, movieFilter)
+
+document <- httr::content(response)$document
+
+names(document)
+
+document$title
+```
+
+
+
+### find
+
+Let's find all comments from Jojen Reed.  To accomplish this we'll construct a filter identical to our previous 'Jojen Reed' filter, except we'll use the `find` endpoint rather than `findOne`.
+
+```{r}
+myFilter <- mongEq("Jojen Reed", "name") %>% 
+  mongFilter()
+
+resp <- find(comments, myFilter)
+
+docs <- httr::content(resp)$documents
+
+length(docs)
+```
+
+Note that since we're using an endpoint which may return multiple documents, the object within our content is called `documents` not `document`.
+
+For our first API call, let's find one document in which the `name` field equals the string `'Jojen Reed'`
+
+While this may seem fairly simple for this small example, as we move forward we will begin utilizing more and more operators in our call.  
+
+
+## 
+
+Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+
+- Never uses retina figures
+- Has a smaller default figure size
+- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+
+## Vignette Info
+
+Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+
+## Styles
+
+The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+
+    output: 
+      rmarkdown::html_vignette:
+        css: mystyles.css
+
+## Figures
+
+The figure sizes have been customised so that you can easily put two images side-by-side. 
+
+```{r, fig.show='hold'}
+plot(1:10)
+plot(10:1)
+```
+
+You can enable figure captions by `fig_caption: yes` in YAML:
+
+    output:
+      rmarkdown::html_vignette:
+        fig_caption: yes
+
+Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+
+## More Examples
+
+You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(head(mtcars, 10))
+```
+
+Also a quote using `>`:
+
+> "He who gives up [code] safety for [code] speed deserves neither."
+([via](https://twitter.com/hadleywickham/status/504368538874703872))

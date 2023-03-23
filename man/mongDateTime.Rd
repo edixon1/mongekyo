@@ -5,7 +5,7 @@
 \title{Creates a date operator using in the BSON format ISO 8601, with a colon
 in the offset.}
 \usage{
-mongDateTime(value, tz = "EST")
+mongDateTime(value, tz = "UTC")
 }
 \arguments{
 \item{value}{Date or Datetime}

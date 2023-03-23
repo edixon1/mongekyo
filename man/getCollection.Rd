@@ -19,7 +19,9 @@ page.}
 
 \item{collection}{collection name}
 
-\item{apiKey}{API key obtained from mongodb.  Recommend to store this in .Renviron file.}
+\item{apiKey}{API key obtained from mongodb.  Recommend to store this in .Renviron file.
+
+TODO: Add a bit of code which checks the connection to the collection}
 }
 \description{
 Create a collection object
