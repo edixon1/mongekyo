@@ -50,7 +50,8 @@ insertMany <- function(collection, documents){
 
 
 #'Converts data.frame to document format
-#'@param data data.frame to be converted to a array of documents in *SON format
+#'@param data data.frame to be converted to a array of documents in BSON format
+#'
 #'@export
 asDocument <- function(data){
 
