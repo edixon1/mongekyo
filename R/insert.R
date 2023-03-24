@@ -15,8 +15,6 @@ insertOne <- function(collection, document){
     document <- mongDoc(document)
   }
 
-  print(document)
-
   reqBody <- stringr::str_replace(collection$REQBODYHEAD, "<query>",
                                   document)
 
