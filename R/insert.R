@@ -40,7 +40,7 @@ insertOne <- function(collection, document){
 insertMany <- function(collection, documents){
 
   if(!grepl("documents", documents)){
-    document <- mongDocs(document)
+    document <- mongDocs(documents)
   }
 
 
