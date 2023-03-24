@@ -15,6 +15,8 @@ insertOne <- function(collection, document){
     document <- mongDoc(document)
   }
 
+  print(document)
+
   reqBody <- stringr::str_replace(collection$REQBODYHEAD, "<query>",
                                   document)
 
@@ -40,8 +42,10 @@ insertOne <- function(collection, document){
 insertMany <- function(collection, documents){
 
   if(!grepl("documents", documents)){
-    document <- mongDocs(documents)
+    documents <- mongDocs(documents)
   }
+
+
 
 
   reqBody <- stringr::str_replace(collection$REQBODYHEAD, "<query>",
@@ -65,8 +69,13 @@ insertMany <- function(collection, documents){
 #'@export
 asDocument <- function(data){
 
-  jsonlite::toJSON(data, pretty = TRUE, auto_unbox = TRUE)
+  out <- jsonlite::toJSON(data, pretty = TRUE, auto_unbox = TRUE, force = TRUE)
 
+  if(nrow(data) < 2){
+    out <- gsub("\\[|\\]", "", out)
+  }
+
+  return(out)
 }
 
 
