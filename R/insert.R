@@ -49,8 +49,10 @@ insertMany <- function(collection, documents){
 
 
 
-
-asDocument <- function(docList){
+#'Converts data.frame to document format
+#'@param data data.frame to be converted to a array of documents in *SON format
+#'@export
+asDocument <- function(data){
 
   jsonlite::toJSON(docList, pretty = TRUE, auto_unbox = TRUE)
 
