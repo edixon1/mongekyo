@@ -11,6 +11,10 @@
 #'@export
 insertOne <- function(collection, document){
 
+  if(!grepl("document", document)){
+    document <- mongDoc(document)
+  }
+
   reqBody <- stringr::str_replace(collection$REQBODYHEAD, "<query>",
                                   document)
 
@@ -34,6 +38,12 @@ insertOne <- function(collection, document){
 #'
 #'@export
 insertMany <- function(collection, documents){
+
+  if(!grepl("documents", documents)){
+    document <- mongDocs(document)
+  }
+
+
   reqBody <- stringr::str_replace(collection$REQBODYHEAD, "<query>",
                                   documents)
 

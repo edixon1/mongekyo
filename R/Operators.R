@@ -155,6 +155,17 @@ mongSet <- function(clause){
   return(sprintf('{ "$set": %s }', clause))
 }
 
+#' @export
+mongDoc <- function(clause){
+  return(sprintf('"document": %s', clause))
+}
+
+#' @export
+mongDocs <- function(clause){
+  return(sprintf('"documents": %s', clause))
+}
+
+
 
 
 
