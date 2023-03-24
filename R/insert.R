@@ -55,7 +55,7 @@ insertMany <- function(collection, documents){
 #'@export
 asDocument <- function(data){
 
-  jsonlite::toJSON(docList, pretty = TRUE, auto_unbox = TRUE)
+  jsonlite::toJSON(data, pretty = TRUE, auto_unbox = TRUE)
 
 }
 
