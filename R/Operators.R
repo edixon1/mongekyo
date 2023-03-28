@@ -31,17 +31,44 @@ mongOid <- function(id){
 #' @param field field
 #'
 #' @export
-mongEq <- function(value, field){
+mongEq <- function(value, field, kvPairs = NULL){
+
+
+  if(!is.null(kvPairs)){
+    if(is.null(names(kvPairs))){
+      stop("kvPairs must be a named list")
+    }
+    # Convert kv pairs into json format
+    out <- Map(kvCombine, kvPairs, names(kvPairs)) %>%
+      unlist() %>%
+      paste(collapse = ", ")
+
+    out <- sprintf("{ %s }", out)
+    return(out)
+
+  } else {
+    out <- sprintf("{ %s }", kvCombine(value, field))
+  }
+
+  return(out)
+}
+
+#' Internal function to combine fields and vlaues
+#' @param value value to assign to a given field
+#' @param field field to which value will be assigned
+#' @returns string in json equal foramt with no surrounding brackets
+#'
+kvCombine <- function(value, field){
 
   # Check if value is numeric
   if(is.numeric(value)){
-    out <- sprintf('{ "%s": %s }', field, value)
-  # Check if value is a clause
+    out <- sprintf('"%s": %s', field, value)
+    # Check if value is a clause
   } else if(jsonlite::validate(value)){
-    out <- sprintf('{ "%s": %s }', field, value)
-  # Value is string
+    out <- sprintf('"%s": %s', field, value)
+    # Value is string
   } else {
-    out <- sprintf('{ "%s": "%s" }', field, value)
+    out <- sprintf('"%s": "%s"', field, value)
   }
 
   return(out)
