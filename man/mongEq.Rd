@@ -10,6 +10,8 @@ mongEq(value, field, kvPairs = NULL)
 \item{value}{value}
 
 \item{field}{field}
+
+\item{kvPairs}{named list of key value pairs to be used if working with multiple fields and values.  value and field parameter will be ignored if this parameter is used.}
 }
 \description{
 Creates BSON formatted key-value pair

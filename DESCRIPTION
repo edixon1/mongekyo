@@ -15,5 +15,6 @@ Imports:
     dplyr,
     httr,
     jsonlite,
-    stringr
+    stringr,
+    lubridate
 Config/testthat/edition: 3

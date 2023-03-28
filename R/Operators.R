@@ -29,6 +29,7 @@ mongOid <- function(id){
 #' Creates BSON formatted key-value pair
 #' @param value value
 #' @param field field
+#' @param kvPairs named list of key value pairs to be used if working with multiple fields and values.  value and field parameter will be ignored if this parameter is used.
 #'
 #' @export
 mongEq <- function(value, field, kvPairs = NULL){
@@ -57,12 +58,16 @@ mongEq <- function(value, field, kvPairs = NULL){
 #' @param value value to assign to a given field
 #' @param field field to which value will be assigned
 #' @returns string in json equal foramt with no surrounding brackets
+#' @importFrom lubridate is.timepoint
 #'
 kvCombine <- function(value, field){
 
   # Check if value is numeric
   if(is.numeric(value)){
     out <- sprintf('"%s": %s', field, value)
+    # Check if value is a date
+  } else if(is.timepoint(value)) {
+    out <- sprintf('"%s": %s', field, mongDateTime(value))
     # Check if value is a clause
   } else if(jsonlite::validate(value)){
     out <- sprintf('"%s": %s', field, value)

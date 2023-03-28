@@ -45,16 +45,49 @@ myIris <- dplyr::mutate(iris, Source.Id = paste0(dplyr::row_number(), "_iris_Loc
 
 irisDocs <- asDocument(myIris)
 
-resp <- insertMany(irisCollection, documents = sprintf('"documents": %s', irisDocs))
+resp <- insertMany(irisCollection, documents = irisDocs)
 
 
 
 
-resp <- insertOne(irisCollection, document = sprintf('"document": %s', irisDocs))
+resp <- insertOne(irisCollection, document = testDoc)
 
 asDocument(myIris)
 
-resp <- findOne(irisCollection, filter = '"filter" : {}')
+resp <- findOne(irisCollection, filter = mongGte(3) %>%
+                  mongEq("Petal_Length") %>%
+                  mongFilter())
+
+upFilter <- mongOid("63d95ffcd098ed7a745ccf81") %>%
+  mongEq("_id") %>%
+  mongFilter()
+
+irisUpdate <- mongEq(kvPairs = list("Petal_Length" = 2, "Petal_Width" = 0.5)) %>%
+  mongSet() %>%
+  mongUpdate()
+
+resp <- updateOne(irisCollection, filter = upFilter,
+                  update = irisUpdate)
+
+
+mongEq(kvPairs = list("TDATE" = mongDateTime("2021-01-26")))
+mongEq(kvPairs = list("_id" = mongOid("asodjbnsadf98h")))
+
+findOne(irisCollection, mongOid("63d95ffcd098ed7a745ccf81") %>% mongEq("_id") %>% mongFilter()) %>%
+  httr::content()
+
+# ---------Here1------------
+upFilter <- mongEq(mongOid("63d95ffcd098ed7a745ccf50"), "_id") %>%
+  mongFilter()
+
+update <- list(mongEq(2, "Petal_Length"), mongEq(0.5, "Petal_Wdith")) %>%
+  mongSet() %>%
+  mongUpdate()
+
+
+resp <- updateOne(irisCollection, upFilter, update)
+
+resp <- findOne(irisCollection, upFilter)
 
 
 
@@ -90,8 +123,7 @@ comments <- getCollection(url = "https://data.mongodb-api.com/app/data-nmzks/end
 resp <- findOne(comments, filter = '"filter": { "$and": [{"name": "Jojen Reed"}, {"date": {"$date": "1996-09-17T15:42:05Z"}} ] }') |>
   httr::content()
 
-resp <- find(comments, filter = '"filter": {"date": {"$date": "1996-09-17T15:42:05Z"}}') |>
-  httr::content()
+resp <- find(comments, filter = '"filter": {"date": {"$date": "1996-09-17T15:42:05Z"}}')
 
 resp <- find(comments, filter = '"filter": {"date": {"$gte": { "$date": "2017-09-01T00:00:00.000+00:00" }}}')
 
@@ -112,7 +144,7 @@ isoTime <- "T00:00:00.000+00:00"
 isoDateTime <- paste0(date, isoTime)
 isoDateTime
 
-
+#0--------Here----------
 
 filter <- mongOid("5a9427658b0beebeb697bfd6") |>
   mongEq("_id") |>
