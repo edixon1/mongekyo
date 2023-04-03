@@ -21,6 +21,8 @@ mongOr <- function(clauses){
   return(out)
 }
 
+
+
 #' @export
 mongOid <- function(id){
   return(sprintf('{ "$oid": "%s" }', id))
@@ -134,6 +136,12 @@ mongLt <- function(value, field = NULL){
 
   return(out)
 
+}
+
+#' @export
+mongRegex <- function(value){
+  out <- sprintf('{ "$regex": "%s" }', value)
+  return(out)
 }
 
 # todo: lots of testing, input validation
