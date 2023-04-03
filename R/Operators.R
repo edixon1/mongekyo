@@ -144,6 +144,12 @@ mongRegex <- function(value){
   return(out)
 }
 
+#' @export
+mongNot <- function(clause){
+  out <- sprintf('{ "$not": %s }', clause)
+  return(out)
+}
+
 # todo: lots of testing, input validation
 #' Creates a date operator using in the BSON format ISO 8601, with a colon
 #' in the offset.
