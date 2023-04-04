@@ -22,6 +22,35 @@ mongOr <- function(clauses){
 }
 
 
+#' Creates a BSON statement with the $in operator and a given BSON array
+#' @param array a character, a string formatted as a BSON array, see the mongArray() function
+#' @param field a character, optional argument to bypass a call to mongEq(), you can pass the field
+#'  whose value should be in the provided array.
+#' @export
+#'
+mongIn <- function(array, field = NULL){
+  if(is.null(field)){
+    out <- sprintf('{ "$in": %s }', array)
+  } else {
+    out <- sprintf('{ "%s": { "$in": %s } }', field, array)
+  }
+  return(out)
+}
+
+#' Formats a vector as a BSON array
+#' @param values a vector which will be formatted based on its type, and formatted
+#'  as a BSON array
+#' @export
+mongArray <- function(values){
+  formattedValues <- sapply(values, formatValue) %>%
+    paste(collapse = ", ")
+
+  out <- sprintf("[%s]", formattedValues)
+
+  return(out)
+}
+
+
 
 #' @export
 mongOid <- function(id){
@@ -59,23 +88,36 @@ mongEq <- function(value, field, kvPairs = NULL){
 #' Internal function to combine fields and vlaues
 #' @param value value to assign to a given field
 #' @param field field to which value will be assigned
-#' @returns string in json equal foramt with no surrounding brackets
-#' @importFrom lubridate is.timepoint
+#' @returns string in BSON equal foramt with no surrounding brackets
 #'
 kvCombine <- function(value, field){
 
+  formattedValue <- formatValue(value)
+
+  out <- sprintf('"%s": %s', field, formattedValue)
+
+  return(out)
+}
+
+
+#' Internal function to format vlaues according to their type
+#' @param value value to assign to a given field
+#' @returns value formatted in BSON according to its data type
+#' @importFrom lubridate is.timepoint
+#'
+formatValue <- function(value){
   # Check if value is numeric
   if(is.numeric(value)){
-    out <- sprintf('"%s": %s', field, value)
+    out <- sprintf('%s', value)
     # Check if value is a date
   } else if(is.timepoint(value)) {
-    out <- sprintf('"%s": %s', field, mongDateTime(value))
+    out <- sprintf('%s', mongDateTime(value))
     # Check if value is a clause
   } else if(jsonlite::validate(value)){
-    out <- sprintf('"%s": %s', field, value)
+    out <- sprintf('%s', value)
     # Value is string
   } else {
-    out <- sprintf('"%s": "%s"', field, value)
+    out <- sprintf('"%s"', value)
   }
 
   return(out)

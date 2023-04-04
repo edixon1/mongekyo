@@ -12,7 +12,7 @@ kvCombine(value, field)
 \item{field}{field to which value will be assigned}
 }
 \value{
-string in json equal foramt with no surrounding brackets
+string in BSON equal foramt with no surrounding brackets
 }
 \description{
 Internal function to combine fields and vlaues
