@@ -16,12 +16,46 @@ knitr::opts_chunk$set(
 )
 ```
 
-Mongekyo is an R package with the goal of making the MongoDB Data API more accessible to R users.  It accomplishes this by generating the BSON required to construct an API call with a family of pipe-friendly functions which allow users to build out API calls piece by piece.
+Mongekyo is designed to make calls to the MongoDB Data API easier to write for R users.  Instead of having to manually write BSON with escaped quotations and all, mongekyo provides a family 
+of pipe-friendly functions which allow users to easily translate between R and BSON.
 
 
-## Getting Started
+# Getting Started
 
-There are some prerequisites to this tutorial:
+## A Quick Hypothetical:
+
+Say (for whatever reason) you've stored the well-known test data set, **iris** within
+a mongodb database, and now you would like to use the data API to pull all documents 
+where the species field contains 'virginica' or 'versicolor'.  You might start by 
+writing up a filter to be placed in your request header, something like:
+
+```{r, eval = FALSe}
+"\"filter\": { \"Species\": { \"$in\": [\"virginica\", \"versicolor\"] } }"
+```
+
+You painstakingly review your BSON formatting, checking that each of your brackets close and
+your quotation marks line up.  After numerous 'Status: 400' codes and cryptic error messages,
+you finally receive 'Status: 200' and a set of documents.  Great!  we accessed the
+mongodb data API and it only took 2 hours.  Now onto automation, right?
+
+Though, wouldn't it be nice if you could just write:
+
+```{r}
+mongArray(c("virginica", "versicolor")) %>%
+  mongIn("Species") %>%
+  mongFilter()
+
+```
+
+I think that would nice.
+
+# Using mongekyo
+
+Below we are going to go through the steps and some test-scenarios to help you 
+become comfortable with the mongekyo syntax.
+
+There are some prerequisites to this tutorial if you'd like to actually execute
+the code examples:
 
 - A MongoDB with Atlas cluster with the Data API enabled
 - An API string (preferably stored in your .Renviron file)
@@ -29,7 +63,7 @@ There are some prerequisites to this tutorial:
 
 Setting up these prerequisites are not within the scope of this document.  However, they are covered in the beginning steps of my other totorial TODO WHEN HOSTED.
 
-If you're completed the initial set up, let's begin.
+If you have completed the initial set up, let's begin.
 
 ```{r message = FALSE}
 #devtools::install_github("https://github.com/edixon1/mongekyo")
@@ -63,7 +97,8 @@ comments <- getCollection(url = "https://data.mongodb-api.com/app/data-nmzks/end
 
 
 ### MongoDB Clauses in BSON
-As stated above, mongekyo provides a family of functions which allow users to build out API requests piece by piece.  One of the largest advantages to this is that it makes typos when creating writing request headers far more unlikely.  
+
+As stated above, mongekyo provides a family of functions which allow users to build out API requests piece by piece.  One of the largest advantages to this is that it makes typos in your request headers far more unlikely.  
 
 Let me illustrate this by comparing a few mongekyo function calls with their equivelent BSON strings.
 
@@ -107,7 +142,6 @@ response <- findOne(collection = comments, filter = myFilter)
 
 response
 
-#find(weatherCol, filter = sprintf('"filter": {"_id": %s}', mongOid("5553a998e4b02cf715119412")))
 ```
 
 
