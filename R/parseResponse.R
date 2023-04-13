@@ -8,7 +8,6 @@ parseResponse <- function(resp){
     return(NULL)
   } else {
     docs <- httr::content(resp)[[1]]
-    docs <- myTest
 
     out <- list()
     # For each document
