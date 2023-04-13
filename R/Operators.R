@@ -3,6 +3,7 @@
 
 
 #' Creates BSON formatted AND of two or more clauses
+#'
 #' TODO: Input validation
 #' @export
 mongAnd <- function(clauses){
@@ -63,7 +64,7 @@ mongOid <- function(id){
 #' @param kvPairs named list of key value pairs to be used if working with multiple fields and values.  value and field parameter will be ignored if this parameter is used.
 #'
 #' @export
-mongEq <- function(value, field, kvPairs = NULL){
+mongEq <- function(value, field, kvPairs = NULL, parseDates = TRUE){
 
 
   if(!is.null(kvPairs)){
@@ -71,7 +72,7 @@ mongEq <- function(value, field, kvPairs = NULL){
       stop("kvPairs must be a named list")
     }
     # Convert kv pairs into json format
-    out <- Map(kvCombine, kvPairs, names(kvPairs)) %>%
+    out <- Map(kvCombine, kvPairs, names(kvPairs), parseDates) %>%
       unlist() %>%
       paste(collapse = ", ")
 
@@ -79,7 +80,7 @@ mongEq <- function(value, field, kvPairs = NULL){
     return(out)
 
   } else {
-    out <- sprintf("{ %s }", kvCombine(value, field))
+    out <- sprintf("{ %s }", kvCombine(value, field, parseDates))
   }
 
   return(out)
@@ -90,9 +91,9 @@ mongEq <- function(value, field, kvPairs = NULL){
 #' @param field field to which value will be assigned
 #' @returns string in BSON equal foramt with no surrounding brackets
 #'
-kvCombine <- function(value, field){
+kvCombine <- function(value, field, parseDate = TRUE){
 
-  formattedValue <- formatValue(value)
+  formattedValue <- formatValue(value, parseDate)
 
   out <- sprintf('"%s": %s', field, formattedValue)
 
@@ -105,13 +106,21 @@ kvCombine <- function(value, field){
 #' @returns value formatted in BSON according to its data type
 #' @importFrom lubridate is.timepoint
 #'
-formatValue <- function(value){
+formatValue <- function(value, parseDate = TRUE){
   # Check if value is numeric
   if(is.numeric(value)){
     out <- sprintf('%s', value)
     # Check if value is a date
   } else if(is.timepoint(value)) {
-    out <- sprintf('%s', mongDateTime(value))
+    if(parseDate){
+      out <- sprintf('%s', mongDateTime(value))
+    } else{
+      out <- sprintf('"%s"', value)
+    }
+
+    # Check if value is a factor
+  } else if(is.factor(value)){
+    out <- sprintf('"%s"', value)
     # Check if value is a clause
   } else if(jsonlite::validate(value)){
     out <- sprintf('%s', value)
