@@ -4,7 +4,7 @@
 \alias{mongEq}
 \title{Creates BSON formatted key-value pair}
 \usage{
-mongEq(value, field, kvPairs = NULL)
+mongEq(value, field, kvPairs = NULL, parseDates = TRUE)
 }
 \arguments{
 \item{value}{value}

@@ -4,7 +4,7 @@
 \alias{formatValue}
 \title{Internal function to format vlaues according to their type}
 \usage{
-formatValue(value)
+formatValue(value, parseDate = TRUE)
 }
 \arguments{
 \item{value}{value to assign to a given field}

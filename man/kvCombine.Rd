@@ -4,7 +4,7 @@
 \alias{kvCombine}
 \title{Internal function to combine fields and vlaues}
 \usage{
-kvCombine(value, field)
+kvCombine(value, field, parseDate = TRUE)
 }
 \arguments{
 \item{value}{value to assign to a given field}
