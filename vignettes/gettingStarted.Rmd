@@ -9,6 +9,13 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r, message = FALSE}
+library(mongekyo)
+library(dplyr)
+library(httr)
+```
+
+
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -29,7 +36,7 @@ a mongodb database, and now you would like to use the data API to pull all docum
 where the species field contains 'virginica' or 'versicolor'.  You might start by 
 writing up a filter to be placed in your request header, something like:
 
-```{r, eval = FALSe}
+```{r, eval = FALSE}
 "\"filter\": { \"Species\": { \"$in\": [\"virginica\", \"versicolor\"] } }"
 ```
 
