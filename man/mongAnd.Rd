@@ -2,12 +2,10 @@
 % Please edit documentation in R/Operators.R
 \name{mongAnd}
 \alias{mongAnd}
-\title{Creates BSON formatted AND of two or more clauses
-TODO: Input validation}
+\title{Creates BSON formatted AND of two or more clauses}
 \usage{
 mongAnd(clauses)
 }
 \description{
-Creates BSON formatted AND of two or more clauses
 TODO: Input validation
 }
