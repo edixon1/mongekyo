@@ -7,10 +7,10 @@
 #'@param pipeline character, aggregation pipeline to subset/summarize documents
 #'TODO: testing, input validation, output validation
 #'@export
-aggregate <- function(collection, filter){
+aggregate <- function(collection, pipeline){
 
   reqBody <- stringr::str_replace(collection$REQBODYHEAD, "<query>",
-                                  filter)
+                                  pipeline)
 
 
   resp <- httr::POST(url = paste0(collection$URL, "/action/aggregate"),
