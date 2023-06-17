@@ -4,7 +4,7 @@
 \alias{aggregate}
 \title{Send request to data API /find endpoint}
 \usage{
-aggregate(collection, filter)
+aggregate(collection, pipeline)
 }
 \arguments{
 \item{collection}{mongekyo collection object}
