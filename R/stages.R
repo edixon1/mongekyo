@@ -44,16 +44,6 @@ sortStage <- function(value, field, kvPairs = NULL){
 
 
 
-
-
-sortList <- list("a" = 1, "b" = -1, "c" = 1)
-
-
-
-
-
-
-
 groupStage <- function(id, accumulators){
 
 }
