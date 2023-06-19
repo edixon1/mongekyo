@@ -21,3 +21,22 @@ aggregate <- function(collection, pipeline){
   return(resp)
 
 }
+
+
+#' Create an aggregation pipeline
+#'
+#' @param stages list of stages or character string containing stages.
+#' If list, each element should contain a stage encased in curly braces.  If character
+#' string, it should be a correctly formatted BSON array of stages.
+#'
+#' TODO: Write code examples once more stages are written
+pipeline <- function(stages){
+
+  if(class(stages) == "list"){
+    stages <- mongArray(stages)
+  }
+
+  out <- sprintf('"pipeline": %s', stages)
+
+  return(out)
+}
