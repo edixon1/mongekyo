@@ -53,6 +53,8 @@ groupStage <- function(id = NULL, accumulators = NULL){
   # Quality of life, so we can use NULL reserved word in R instead of 'null' string
   if(is.null(id)){
     id = "null"
+  } else {
+    id = formatAggregationValue(id)
   }
   
   # If no accumulators are provided, return stage with just _id
