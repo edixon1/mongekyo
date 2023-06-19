@@ -36,15 +36,38 @@ sortStage <- function(value, field, kvPairs = NULL){
   }
 
   out <- sprintf('{"$sort": {%s}}', exp)
-
-
+  
   return(out)
 }
 
 
 
-
-groupStage <- function(id, accumulators){
+#' Create a $group aggration stage
+#' 
+#' @param id character string, contains a field or expression to be used as the group key.
+#' @param accumulators named list, list names will be the name of fields created within the output
+#' document, list values are character strings containing accumulator expressions.
+#'
+#' @export
+groupStage <- function(id = NULL, accumulators = NULL){
+  # Quality of life, so we can use NULL reserved word in R instead of 'null' string
+  if(is.null(id)){
+    id = "null"
+  }
+  
+  # If no accumulators are provided, return stage with just _id
+  if(is.null(accumulators)){
+    return(sprintf('{"$group": {"_id": %s}}', id))
+  } 
+  
+  # Create expression from list of accumulators
+  accExp <- Map(kvCombine, accumulators, names(accumulators), FALSE) %>%
+    unlist() %>%
+    paste(collapse = ", ")
+  
+  out <- sprintf('{"$group": {"_id": %s, %s}}', id, accExp)
+  
+  return(out)
 
 }
 

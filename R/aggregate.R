@@ -5,7 +5,7 @@
 #' Send request to data API /find endpoint
 #'@param collection mongekyo collection object
 #'@param pipeline character, aggregation pipeline to subset/summarize documents
-#'TODO: testing, input validation, output validation
+#'
 #'@export
 aggregate <- function(collection, pipeline){
 
@@ -27,7 +27,8 @@ aggregate <- function(collection, pipeline){
 #'
 #' @param stages list of stages or character string containing stages.
 #' If list, each element should contain a stage encased in curly braces.  If character
-#' string, it should be a correctly formatted BSON array of stages.
+#' string, it should be a correctly formatted BSON array of stages 
+#' (use mongArray to convert an expression to BSON array).
 #'
 #' TODO: Write code examples once more stages are written
 #' @export

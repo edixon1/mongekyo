@@ -9,8 +9,7 @@ aggregate(collection, pipeline)
 \arguments{
 \item{collection}{mongekyo collection object}
 
-\item{pipeline}{character, aggregation pipeline to subset/summarize documents
-TODO: testing, input validation, output validation}
+\item{pipeline}{character, aggregation pipeline to subset/summarize documents}
 }
 \description{
 Send request to data API /find endpoint

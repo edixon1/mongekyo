@@ -9,7 +9,8 @@ pipeline(stages)
 \arguments{
 \item{stages}{list of stages or character string containing stages.
 If list, each element should contain a stage encased in curly braces.  If character
-string, it should be a correctly formatted BSON array of stages.
+string, it should be a correctly formatted BSON array of stages
+(use mongArray to convert an expression to BSON array).
 
 TODO: Write code examples once more stages are written}
 }
