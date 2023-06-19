@@ -2,9 +2,9 @@
 % Please edit documentation in R/Operators.R
 \name{mongAnd}
 \alias{mongAnd}
-\title{Creates BSON formatted AND of two or more clauses}
+\title{Creates BSON formatted AND of two or more expressions}
 \usage{
-mongAnd(clauses)
+mongAnd(expressions)
 }
 \description{
 TODO: Input validation

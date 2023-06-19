@@ -2,12 +2,12 @@
 % Please edit documentation in R/Operators.R
 \name{mongOr}
 \alias{mongOr}
-\title{Creates BSON formatted OR of two or more clauses
+\title{Creates BSON formatted OR of two or more expressions
 TODO: Input validation}
 \usage{
-mongOr(clauses)
+mongOr(expressions)
 }
 \description{
-Creates BSON formatted OR of two or more clauses
+Creates BSON formatted OR of two or more expressions
 TODO: Input validation
 }

@@ -30,6 +30,7 @@ aggregate <- function(collection, pipeline){
 #' string, it should be a correctly formatted BSON array of stages.
 #'
 #' TODO: Write code examples once more stages are written
+#' @export
 pipeline <- function(stages){
 
   if(class(stages) == "list"){
