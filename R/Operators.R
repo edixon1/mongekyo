@@ -2,23 +2,23 @@
 # 2023-01-27
 
 
-#' Creates BSON formatted AND of two or more clauses
+#' Creates BSON formatted AND of two or more expressions
 #'
 #' TODO: Input validation
 #' @export
-mongAnd <- function(clauses){
-  combinedClauses <- paste0(clauses, collapse = ", ")
-  out <- sprintf('{ "$and": [%s] }', combinedClauses)
+mongAnd <- function(expressions){
+  combinedexpressions <- paste0(expressions, collapse = ", ")
+  out <- sprintf('{ "$and": [%s] }', combinedexpressions)
   return(out)
 }
 
 
-#' Creates BSON formatted OR of two or more clauses
+#' Creates BSON formatted OR of two or more expressions
 #' TODO: Input validation
 #' @export
-mongOr <- function(clauses){
-  combinedClauses <- paste0(clauses, collapse = ", ")
-  out <- sprintf('{ "$or": [%s] }', combinedClauses)
+mongOr <- function(expressions){
+  combinedexpressions <- paste0(expressions, collapse = ", ")
+  out <- sprintf('{ "$or": [%s] }', combinedexpressions)
   return(out)
 }
 
@@ -121,7 +121,7 @@ formatValue <- function(value, parseDate = TRUE){
     # Check if value is a factor
   } else if(is.factor(value)){
     out <- sprintf('"%s"', value)
-    # Check if value is a clause
+    # Check if value is a expression
   } else if(jsonlite::validate(value)){
     out <- sprintf('%s', value)
     # Value is string
@@ -196,8 +196,8 @@ mongRegex <- function(value){
 }
 
 #' @export
-mongNot <- function(clause){
-  out <- sprintf('{ "$not": %s }', clause)
+mongNot <- function(expression){
+  out <- sprintf('{ "$not": %s }', expression)
   return(out)
 }
 
@@ -238,28 +238,28 @@ mongDateFormat <- function(value, tz = "UTC"){
 
 # todo: testing
 #' @export
-mongFilter <- function(clause){
-  return(sprintf('"filter": %s', clause))
+mongFilter <- function(expression){
+  return(sprintf('"filter": %s', expression))
 }
 
 #' @export
-mongUpdate <- function(clause){
-  return(sprintf('"update": %s', clause))
+mongUpdate <- function(expression){
+  return(sprintf('"update": %s', expression))
 }
 
 #' @export
-mongSet <- function(clause){
-  return(sprintf('{ "$set": %s }', clause))
+mongSet <- function(expression){
+  return(sprintf('{ "$set": %s }', expression))
 }
 
 #' @export
-mongDoc <- function(clause){
-  return(sprintf('"document": %s', clause))
+mongDoc <- function(expression){
+  return(sprintf('"document": %s', expression))
 }
 
 #' @export
-mongDocs <- function(clause){
-  return(sprintf('"documents": %s', clause))
+mongDocs <- function(expression){
+  return(sprintf('"documents": %s', expression))
 }
 
 
