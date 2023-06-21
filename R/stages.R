@@ -101,3 +101,34 @@ groupStage <- function(id = NULL, accumulators = NULL, kvPairs = NULL){
 
 }
 
+
+#' Create a $lookup aggregation stage
+#' 
+#' @param from Specifies the collection in the same database to perform the join with
+#' @param localField Specifies the field from the documents input to the $lookup stage
+#' @param foreignField Specifies the field from the documents in the from collection
+#' @param as Specifies the name of the new array field to add to the input documents
+#' 
+#' TODO implement optional parameters, see issue #5
+#'
+#' @examples
+#' 
+#' # Create a lookup stage to get movie documents from comment document
+#' lookupStage(from = "movies", localField = "movie_id",
+#'             foreignField = "_id", as = "movieDocs")
+#'   
+#' # Use lookup stage in pipeline 
+#' pipeline <- list(mongEq("Jojen Reed", "name") %>% matchStage(),
+#'                  lookup = lookupStage(from = "movies", localField = "movie_id",
+#'                                      foreignField = "_id", as = "movieDocs")) %>% 
+#'   pipeline()
+#' @export
+lookupStage <- function(from, localField, foreignField, as){
+
+  out <- sprintf('{"$lookup": {"from": "%s", "localField": "%s", "foreignField": "%s", "as": "%s"}}', 
+                 from, localField, foreignField, as)
+  
+  return(out)
+  
+}
+
