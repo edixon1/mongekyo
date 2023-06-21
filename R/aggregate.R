@@ -29,10 +29,15 @@ aggregate <- function(collection, pipeline){
 #' If list, each element should contain a stage encased in curly braces.  If character
 #' string, it should be a correctly formatted BSON array of stages 
 #' (use mongArray to convert an expression to BSON array).
-#'
-#' TODO: Write code examples once more stages are written
+#' @examples
+#' # Create a pipeline which will pull movie documents for comments made by 'Jojen Reed'
+#' pipeline <- list(match = mongEq("Jojen Reed", "name") %>% matchStage(),
+#'                  lookup = lookupStage(from = "movies", localField = "movie_id",
+#'                                       foreignField = "_id", as = "movieDocs")) %>% 
+#'   pipeline()
 #' @export
 pipeline <- function(stages){
+  # TODO: Write code examples once more stages are written
 
   if(class(stages) == "list"){
     stages <- mongArray(stages)

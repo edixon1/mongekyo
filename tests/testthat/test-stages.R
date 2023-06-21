@@ -47,3 +47,15 @@ output <- lookupStage(from = "movies", localField = "movie_id",
 
 expect_equal(output, "{\"$lookup\": {\"from\": \"movies\", \"localField\": \"movie_id\", \"foreignField\": \"_id\", \"as\": \"movieDocs\"}}")
 })
+
+
+# projectStage ----
+
+test_that("projectStage works with basic input", {
+  expect_equal(projectStage(list(`title` = 1, `cast` = 1)), "{\"$project\": {\"title\": 1, \"cast\": 1}}")
+})
+
+test_that("projectStage works with array elem selection", {
+  output <- projectStage(list(`title` = 1, `lead` = '{"$arrayElemAt": ["$cast", 0]}'))
+  expect_equal(output, "{\"$project\": {\"title\": 1, \"lead\": {\"$arrayElemAt\": [\"$cast\", 0]}}}")
+})

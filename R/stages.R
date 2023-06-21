@@ -132,3 +132,29 @@ lookupStage <- function(from, localField, foreignField, as){
   
 }
 
+
+#' Create a $project stage
+#' @param kvPairs named list, name provides name of field to be created, value 
+#' contains expression to generate the field's value
+#'
+#' @examples
+#' projStage <- projectStage(list(`title` = 1, `lead` = '{"$arrayElemAt": ["$cast", 0]}'))
+#' 
+#'\dontrun{
+#' pipeline <- list(projectStage(list(`title` = 1, 
+#'                                    `lead` = '{"$arrayElemAt": ["$cast", 0]}'))) %>% 
+#' pipeline()
+#' resp <- aggregate(movies, pipeline)
+#'}
+#' @export
+projectStage <- function(kvPairs){
+  expressions <- Map(kvCombine, kvPairs, names(kvPairs), FALSE, FALSE) %>%
+    unlist() %>%
+    paste(collapse = ", ")
+  
+  out <- sprintf('{"$project": {%s}}', expressions)
+  
+  return(out)
+  
+}
+
