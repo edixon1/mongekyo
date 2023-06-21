@@ -4,14 +4,29 @@
 \alias{groupStage}
 \title{Create a $group aggration stage}
 \usage{
-groupStage(id = NULL, accumulators = NULL)
+groupStage(id = NULL, accumulators = NULL, kvPairs = NULL)
 }
 \arguments{
 \item{id}{character string, contains a field or expression to be used as the group key.}
 
 \item{accumulators}{named list, list names will be the name of fields created within the output
 document, list values are character strings containing accumulator expressions.}
+
+\item{kvPairs}{named list, replaces the id parameter if provided.  list names
+will be the name of _id fields created within the output, list values are the fields
+which should be used as _ids}
 }
 \description{
 Create a $group aggration stage
+}
+\examples{
+ 
+ # Basic call:
+ groupStage(id = "PID", accumulators = list(totalHours = mongSum("THOURS")))
+ 
+ # kvPairs to use multiple _id fields:
+ groupStage(kvPairs = list("project" = "PID", "employee" = "TSTAFF"), 
+ accumulators = list(totalHours = mongSum("THOURS")))
+
+
 }

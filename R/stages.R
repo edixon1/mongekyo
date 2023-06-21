@@ -46,15 +46,43 @@ sortStage <- function(value, field, kvPairs = NULL){
 #' 
 #' @param id character string, contains a field or expression to be used as the group key.
 #' @param accumulators named list, list names will be the name of fields created within the output
-#' document, list values are character strings containing accumulator expressions.
+#'  document, list values are character strings containing accumulator expressions.
+#' @param kvPairs named list, replaces the id parameter if provided.  list names
+#'  will be the name of _id fields created within the output, list values are the fields
+#'  which should be used as _ids
+#' 
+#' @examples
+#'  
+#'  # Basic call:
+#'  groupStage(id = "PID", accumulators = list(totalHours = mongSum("THOURS")))
+#'  
+#'  # kvPairs to use multiple _id fields:
+#'  groupStage(kvPairs = list("project" = "PID", "employee" = "TSTAFF"), 
+#'  accumulators = list(totalHours = mongSum("THOURS")))
+#' 
 #'
 #' @export
-groupStage <- function(id = NULL, accumulators = NULL){
-  # Quality of life, so we can use NULL reserved word in R instead of 'null' string
-  if(is.null(id)){
-    id = "null"
+groupStage <- function(id = NULL, accumulators = NULL, kvPairs = NULL){
+
+  if(!is.null(kvPairs)){
+    
+    id <- lapply(kvPairs, formatAggregationValue)
+    
+    
+    id <- Map(kvCombine, id, names(id), FALSE, FALSE) %>%
+      unlist() %>%
+      paste(collapse = ", ")
+    
+    id <- sprintf("{%s}", id)
+    
   } else {
-    id = formatAggregationValue(id)
+    # Quality of life, so we can use NULL reserved word in R instead of 'null' string
+    if(is.null(id)){
+      id = "null"
+    }  else {
+      id = formatAggregationValue(id)
+    }
+    
   }
   
   # If no accumulators are provided, return stage with just _id

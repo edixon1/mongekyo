@@ -23,8 +23,16 @@ test_that("sort stage works with two arguments in list", {
 
 test_that("group stage works with one id and $sum accumulator", {
   accumulators <- list(totalHours = '{"$sum": "$THOURS"}')
-  expect_equal(groupStage('"$PID"', accumulators), 
+  expect_equal(groupStage("PID", accumulators), 
                "{\"$group\": {\"_id\": \"$PID\", \"totalHours\": {\"$sum\": \"$THOURS\"}}}")
   
   
+})
+
+
+test_that("group stage works when KVpairs is provided with multiple _id fieds", {
+  output <- groupStage(kvPairs = list("project" = "PID", "employee" = "TSTAFF"), 
+             accumulators = list(totalHours = mongSum("THOURS")))
+  
+  expect_equal(output, "{\"$group\": {\"_id\": {\"project\": \"$PID\", \"employee\": \"$TSTAFF\"}, \"totalHours\": {\"$sum\": \"$THOURS\"}}}")
 })
