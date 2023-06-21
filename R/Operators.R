@@ -91,11 +91,15 @@ mongEq <- function(value, field, kvPairs = NULL, parseDates = TRUE){
 #' @param field field to which value will be assigned
 #' @returns string in BSON equal foramt with no surrounding brackets
 #'
-kvCombine <- function(value, field, parseDate = TRUE){
+#'TODO: Need to add logical argument to specify whether to use formatValue or not,
+#'   This should default to TRUE
+kvCombine <- function(value, field, parseDate = TRUE, format = TRUE){
 
-  formattedValue <- formatValue(value, parseDate)
+  if(format){
+    value <- formatValue(value, parseDate)
+  }
 
-  out <- sprintf('"%s": %s', field, formattedValue)
+  out <- sprintf('"%s": %s', field, value)
 
   return(out)
 }
